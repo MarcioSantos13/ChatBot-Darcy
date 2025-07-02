@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Perguntas Cadastradas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container list-container">
+    <h1>Lista de Perguntas Cadastradas</h1>
+    <ul class="question-list">
+        {% for pergunta in perguntas %}
+            <li class="question-item">{{ pergunta[0] }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="/train_page"><button class="btn-secondary">Treinar Novas Perguntas</button></a>
+    <a href="/"><button class="btn-secondary">Voltar ao Chat</button></a>
+</div>
+
+</body>
+</html>

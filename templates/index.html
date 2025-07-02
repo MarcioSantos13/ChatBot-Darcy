@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Chatbot Darcy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Chatbot Darcy</h1>
+
+        <div class="chat-box" id="chatBox"></div>
+
+        <!-- Campo de entrada com múltiplas linhas -->
+        <div class="input-area">
+            <textarea id="userInput" placeholder="Digite sua mensagem..." rows="1"></textarea>
+            <button id="sendButton">Enviar</button>
+        </div>
+
+    </div>
+
+    <div class="chat-buttons">
+        <a href="/train_page"><button class="btn-secondary">Treinar Chatbot</button></a>
+        <a href="/list_questions"><button class="btn-secondary">Ver Perguntas Cadastradas</button></a>
+    </div>
+
+    <script>
+        // Insere a mensagem de apresentação ao carregar
+        window.addEventListener("load", function () {
+            const chatBox = document.getElementById("chatBox");
+            chatBox.innerHTML += `
+        <div class="message-container bot-message">
+          <div class="message-text"><strong>Darcy:</strong> Olá, sou Darcy, seu tutor artificial. Como posso te ajudar hoje?</div>
+          <div class="message-time">${new Date().toLocaleTimeString()}</div>
+        </div>`;
+        });
+
+        // Faz o textarea crescer conforme o conteúdo
+        const userInput = document.getElementById("userInput");
+        userInput.addEventListener("input", function () {
+            this.style.height = "auto";
+            this.style.height = this.scrollHeight + "px";
+        });
+
+        // Envia a mensagem ao clicar no botão ou pressionar "Enter"
+        document.getElementById("sendButton").addEventListener("click", enviarMensagem);
+        userInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                enviarMensagem();
+            }
+        });
+
+        function enviarMensagem() {
+            const userText = userInput.value.trim();
+            const chatBox = document.getElementById("chatBox");
+
+            if (userText !== "") {
+                const horaAtual = new Date().toLocaleTimeString();
+
+                chatBox.innerHTML += `
+          <div class="message-container user-message">
+            <div class="message-text"><strong>Você:</strong> ${userText}</div>
+            <div class="message-time">${horaAtual}</div>
+          </div>`;
+
+                fetch("/get?msg=" + encodeURIComponent(userText))
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const horaResposta = new Date().toLocaleTimeString();
+                        chatBox.innerHTML += `
+              <div class="message-container bot-message">
+                <div class="message-text"><strong>Darcy:</strong> ${data.resposta}</div>
+                <div class="message-time">${horaResposta}</div>
+              </div>`;
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    })
+                    .catch((error) => console.error("Erro ao obter resposta:", error));
+
+                userInput.value = "";
+                userInput.style.height = "auto"; // Reseta altura após envio
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Treinar Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container train-container">
+        <h1>Treinar Darcy</h1>
+        <p class="intro">Adicione novas perguntas e respostas para melhorar a interação do chatbot.</p>
+
+        <form action="/train" method="post" class="train-form">
+            <label for="pergunta">Pergunta:</label>
+            <input type="text" id="pergunta" name="pergunta" required placeholder="Digite a pergunta..." />
+
+            <label for="resposta">Resposta:</label>
+            <input type="text" id="resposta" name="resposta" required placeholder="Digite a resposta..." />
+
+            <button type="submit" class="btn-primary">Treinar</button>
+        </form>
+
+        <p id="mensagemStatus" class="status-message"></p>
+
+        <div class="button-container">
+            <a href="/list_questions"><button class="btn-secondary">Ver Perguntas Cadastradas</button></a>
+            <a href="/"><button class="btn-secondary">Voltar ao Chat</button></a>
+        </div>
+    </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var form = document.querySelector(".train-form");
+    var mensagemStatus = document.getElementById("mensagemStatus");
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(form);
+
+        fetch("/train", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())  
+        .then(data => {
+            mensagemStatus.textContent = data.message;
+            mensagemStatus.style.color = "green"; 
+
+            form.reset();
+
+            setTimeout(() => {
+                mensagemStatus.textContent = "";
+            }, 2000);
+        })
+        .catch(error => {
+            mensagemStatus.style.color = "red"; 
+            mensagemStatus.textContent = "Erro ao treinar o chatbot.";
+            console.error("Erro:", error);
+        });
+    });
+});
+</script>
+
+</body>
+</html>
