@@ -1,4 +1,6 @@
 # 🤖 Chatbot-Darcy
+## Branch API-FASTAPI
+
 
 Um chatbot inteligente treinável com base de dados própria, integração via Flask e MySQL, fallback com ChatterBot, busca fuzzy e interface para treinamento. Ideal para suporte educacional (ex: Plataforma Aprender da UnB).
 
