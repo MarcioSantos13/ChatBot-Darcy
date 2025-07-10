@@ -18,6 +18,8 @@ Um chatbot inteligente treinável com base de dados própria, integração via F
 
 ## 🗂️ Estrutura do Projeto
 
+
+## Estrutura chatbot_darcy
 ```
 chatbot_darcy/
 ├── app.py                     # Lógica principal da aplicação
